@@ -12,6 +12,7 @@ import { ProductImage } from "./schemas/ProductImage";
 import { CartItem } from "./schemas/CartItem";
 import { insertSeedData } from "./seed-data";
 import { sendPasswordResetEmail } from "./lib/mail";
+import extendGraphqlSchema from "./mutations";
 
 const databaseURL =
   process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits";
@@ -27,7 +28,6 @@ const { withAuth } = createAuth({
   secretField: "password",
   initFirstItem: {
     fields: ["name", "email", "password"],
-    // TODO: Add initial roles
   },
   passwordResetLink: {
     async sendToken(args) {
@@ -59,6 +59,7 @@ export default withAuth(
       ProductImage,
       CartItem,
     }),
+    extendGraphqlSchema,
     ui: {
       // TODO: show ui only for people passing the auth test
       isAccessAllowed: ({ session }) => !!session?.data,
